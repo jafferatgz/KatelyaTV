@@ -16,10 +16,15 @@ interface SourceSelectorProps {
 const defaultCategories: SelectorOption[] = [
   { label: '全部', value: '全部' },
   { label: '电影', value: '电影' },
-  { label: '空姐', value: '空姐' },
+  { label: '调教', value: '调教' },
   { label: '动漫', value: '动漫' },
-  { label: '综艺', value: '综艺' },
+  { label: '惩罚', value: '惩罚' },
   { label: '虐待', value: '虐待' },
+  { label: '情色', value: '情色' },
+  { label: '女奴', value: '女奴' },
+  { label: '母狗', value: '母狗' },
+  { label: '强暴', value: '强暴' },
+  { label: '羞辱', value: '羞辱' },
   { label: 'SM', value: 'SM' },
 ];
 
