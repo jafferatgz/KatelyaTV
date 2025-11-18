@@ -3,17 +3,16 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { SearchResult } from '@/lib/types';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import PageLayout from '@/components/PageLayout';
-import VideoCard from '@/components/VideoCard';
 import DoubanCardSkeleton from '@/components/DoubanCardSkeleton';
 import SourceSelector from '@/components/SourceSelector';
+import VideoCard from '@/components/VideoCard';
+import { SearchResult } from '@/lib/types';
 
 // 从视频源获取分类数据的函数
-async function fetchSourceVideos(category: string = '全部', pageStart: number = 0, pageLimit: number = 25) {
+async function fetchSourceVideos(category = '全部', pageStart = 0, pageLimit = 25) {
   try {
     const url = `/api/source/category?category=${encodeURIComponent(category)}&start=${pageStart}&limit=${pageLimit}`;
     const response = await fetch(url, {
@@ -36,7 +35,7 @@ async function fetchSourceVideos(category: string = '全部', pageStart: number 
 }
 
 function SourcePageClient() {
-  const searchParams = useSearchParams();
+  const _searchParams = useSearchParams();
   const [videos, setVideos] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -48,7 +47,7 @@ function SourcePageClient() {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 分类选择状态
-  const [categorySelection, setCategorySelection] = useState<string>('全部');
+  const [categorySelection, setCategorySelection] = useState('全部');
 
   // 初始化时标记选择器为准备好状态
   useEffect(() => {
@@ -233,11 +232,7 @@ function SourcePageClient() {
           {/* 加载更多指示器 */}
           {hasMore && !loading && (
             <div
-              ref={(el) => {
-                if (el && el.offsetParent !== null) {
-                  loadingRef.current = el;
-                }
-              }}
+              ref={loadingRef}
               className='flex justify-center mt-12 py-8'
             >
               {isLoadingMore && (
