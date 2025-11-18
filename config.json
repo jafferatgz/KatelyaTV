@@ -1,15 +1,6 @@
 {
   "cache_time": 7200,
   "api_site": {
-    "155api": {
-      "api": "https://155api.com/api.php/provide/vod",
-      "name": "AV-155",
-      "detail": "https://155api.com"
-    },
-    "360zy": {
-      "api": "https://360zy.com/api.php/provide/vod",
-      "name": "TV-360",
-      "detail": "https://360zy.com"
-    }
+    
   }
 }
