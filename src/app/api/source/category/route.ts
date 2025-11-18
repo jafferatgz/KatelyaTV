@@ -1,7 +1,33 @@
+/* eslint-disable no-console,react-hooks/exhaustive-deps,@typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from 'next/server';
-import { getAvailableApiSites } from '@/lib/config';
-import { API_CONFIG } from '@/lib/config';
+
+import { API_CONFIG, getAvailableApiSites } from '@/lib/config';
 import { cleanHtmlTags } from '@/lib/utils';
+
+interface ApiSearchItem {
+  vod_id: string;
+  vod_name: string;
+  vod_pic: string;
+  vod_play_url?: string;
+  vod_class?: string;
+  vod_year?: string;
+  vod_content?: string;
+  type_name?: string;
+}
+
+interface VideoResult {
+  id: string;
+  title: string;
+  poster: string;
+  episodes: string[];
+  source: string;
+  source_name: string;
+  class: string;
+  year: string;
+  desc: string;
+  type_name: string;
+}
 
 // 带超时控制的fetch请求函数
 async function fetchWithTimeout(
@@ -41,7 +67,7 @@ async function fetchCategoryVideosFromApi(
   sourceKey: string,
   sourceName: string,
   category: string
-): Promise<any[]> {
+): Promise<VideoResult[]> {
   try {
     // 根据分类构建搜索关键词
     const searchKeyword = category === '全部'
@@ -67,7 +93,7 @@ async function fetchCategoryVideosFromApi(
     }
 
     // 转换数据格式
-    const videos = data.list.map((item: any) => {
+    const videos = data.list.map((item: ApiSearchItem) => {
       let episodes: string[] = [];
       if (item.vod_play_url) {
         const m3u8Regex = /\$(https?:\/\/[^"'\s]+?\.m3u8)/g;
@@ -98,11 +124,11 @@ async function fetchCategoryVideosFromApi(
         desc: cleanHtmlTags(item.vod_content || ''),
         type_name: item.type_name || ''
       };
-    }).filter((video: any) => video.title && video.poster); // 过滤无效数据
+    }).filter((video: VideoResult) => video.title && video.poster); // 过滤无效数据
 
     // 如果是特定分类，尝试根据分类进行过滤
     if (category !== '全部') {
-      return videos.filter(video => {
+      return videos.filter((video: VideoResult) => {
         const videoClass = (video.class || '').toLowerCase();
         const videoTypeName = (video.type_name || '').toLowerCase();
         const videoTitle = (video.title || '').toLowerCase();
@@ -153,7 +179,7 @@ export async function GET(request: NextRequest) {
     const results = await Promise.allSettled(videosPromises);
 
     // 合并所有成功的结果
-    const allVideos: any[] = [];
+    const allVideos: VideoResult[] = [];
     results.forEach((result, index) => {
       if (result.status === 'fulfilled') {
         allVideos.push(...result.value);
