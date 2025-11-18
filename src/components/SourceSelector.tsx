@@ -33,7 +33,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
     left: number;
     width: number;
   }>({ left: 0, width: 0 });
-  const [categories, setCategories] = useState<SelectorOption[]>(defaultCategories);
+  const [categories, _setCategories] = useState<SelectorOption[]>(defaultCategories);
 
   // 更新指示器位置
   const updateIndicatorPosition = (activeIndex: number) => {
@@ -68,7 +68,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
     );
     const cleanup = updateIndicatorPosition(activeIndex);
     return cleanup;
-  }, []);
+  }, [categories, categorySelection]);
 
   // 监听选择器变化
   useEffect(() => {
@@ -77,7 +77,7 @@ const SourceSelector: React.FC<SourceSelectorProps> = ({
     );
     const cleanup = updateIndicatorPosition(activeIndex);
     return cleanup;
-  }, [categorySelection]);
+  }, [categories, categorySelection]);
 
   // 渲染胶囊式选择器
   const renderCapsuleSelector = () => {
